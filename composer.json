@@ -1,6 +1,6 @@
 {
     "name": "smart-core/html-bundle",
-    "description": "Core of Smart Core CMF.",
+    "description": "Html boilerplate.",
     "keywords": ["html", "bundle"],
     "type": "symfony-bundle",
     "homepage": "http://smart-core.org",
