@@ -1,4 +1,4 @@
-{% block html_doctype html.getDoctype %}
+{% block html_doctype html.getDoctype|raw %}
 <head>
     <title>{% block html_head_title %}{% if html.title %}{{ html.title }}{% endif %}{% endblock html_head_title %}</title>
 {# Meta #}    <!-- Meta -->
