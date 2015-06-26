@@ -1,55 +1,90 @@
-{% block html_doctype html.getDoctype|raw %}
+{% spaceless %}
+{% set html = smart_html() %}
+
+{# В шаблоне можно указать массив нужных библиотек в следующем формате:
+    {% set use_libs = {
+        'bootstrap': null,
+        'syntaxhighlighter': null,
+        'less': '1.7.0',
+    } %}
+#}
+{% if use_libs is defined %}
+    {% set felib = true %}
+    {% for name, version in use_libs %}
+        {% set felib = felib_use(name, version) %}
+    {% endfor %}
+{% endif %}
+
+{# Также можно подключить библиотеку следующим способом
+    {% set felib = felib_use('bootstrap') %}
+#}
+{% if felib is defined %}
+    {% for lib in felib_get_all() %}
+        {% if lib.js is defined %}
+            {% for js in lib.js %}
+                {% set felib = html.js(js, 200) %}
+            {% endfor %}
+        {% endif %}
+        {% if lib.css is defined %}
+            {% for css in lib.css %}
+                {% set felib = html.css(css, 200) %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{% endspaceless %}
+{% block doctype html.getDoctype|raw %}
 <head>
-    <title>{% block html_head_title %}{% if html.title %}{{ html.title }}{% endif %}{% endblock html_head_title %}</title>
-{# Meta #}    <!-- Meta -->
-{% block html_head_meta %}
+    <title>{% block title %}{% if html.title %}{{ html.title }}{% endif %}{% endblock title %}</title>
+    <!-- Meta -->
+{% block meta %}
+{% if html.isHtml5 %}
+    <meta charset="utf-8">
+{% endif %}
 {% for type, vals in html.meta %}
 {% for name, content in vals %}
     <meta {{ type }}="{{ name }}" content="{{ content }}"{{ html.end }}>
 {% endfor %}
 {% endfor %}
-{% endblock html_head_meta %}
-{# Links #}    <!-- Links -->
-{% block html_head_links %}
+{% endblock meta %}
+
+    <!-- Links -->
+{% block links %}
 {% for href, link in html.links %}
-{% if link._ie %}    <!--[if {{ link._ie }}]>
-{% endif %}
-    <link{% for attr, value in link %}{% if attr == '_ie' %}{% else %} {{ attr }}="{{ value }}"{% endif %}{% endfor %}{{ html.end }}>
-{% if link._ie %}    <![endif]-->
-{% endif %}
+    <link{% for attr, value in link %} {{ attr }}="{{ value }}"{% endfor %}{{ html.end }}>
 {% endfor %}
-{% endblock html_head_links %}
-{# Styles #}    <!-- Styles -->
-{% block html_head_styles %}
+{% endblock links %}
+
+    <!-- Styles -->
+{% block pre_styles '' %}
+
+{% block styles %}
 {% for name, style in html.styles %}
-{% if style._ie %}    <!--[if {{ style._ie }}]>
-{% endif %}
-    <style{% for attr, value in style %}{% if attr == '_code' or attr == '_ie' or attr == 'href' %}{% else %} {{ attr }}="{{ value }}"{% endif %}{% endfor %}>{% if style.href %} @import url({{ style.href | raw }}); {% endif %}
+    <style{% for attr, value in style %}{% if attr == '_code' or attr == 'href' %}{% else %} {{ attr }}="{{ value }}"{% endif %}{% endfor %}>{% if style.href %} @import url({{ style.href | raw }}); {% endif %}
 {% if style._code %}{{ style._code | raw }}{% endif %}</style>
-{% if style._ie %}    <![endif]-->
-{% endif %}
 {% endfor %}
-{% endblock html_head_styles %}
-{# Scripts #}    <!-- Scripts -->
-{% block html_head_scripts %}
-    <script type="text/javascript">var basePath = "{{ app.request.basePath }}/"</script>
+{% endblock styles %}
+
+{% block post_styles '' %}
+
+    <!-- Scripts -->
+{% block scripts %}
+    <script type="text/javascript">var basePath = "{{ app.request.baseUrl }}/"</script>
 {% for name, script in html.scripts %}
-{% if script._ie %}    <!--[if {{ script._ie }}]>
-{% endif %}
-    <script{% for attr, value in script %}{% if attr == '_code' or attr == '_ie' %}{% else %} {{ attr }}="{{ value | raw }}"{% endif %}{% endfor %}>{% if script._code %}{{ script._code | raw }}{% endif %}</script>
-{% if script._ie %}    <![endif]-->
-{% endif %}
+    <script{% for attr, value in script %}{% if attr == '_code' %}{% else %} {{ attr }}="{{ value | raw }}"{% endif %}{% endfor %}>{% if script._code %}{{ script._code | raw }}{% endif %}</script>
 {% endfor %}
-{% endblock html_head_scripts %}
-{% block html_head_general_data %}
-    <!-- general_data -->
-    {{ html.general_data }}
-{% if html.document_ready %}<!-- document_ready -->{{ html.document_ready }}{% endif %}
-{% endblock html_head_general_data %}
+{% endblock scripts %}
+
+{# Custom code #}
+{% block html_head_custom_code %}
+    {{ html.custom_code }}
+    {% if html.document_ready %}<!-- document_ready -->{{ html.document_ready }}{% endif %}
+{% endblock html_head_custom_code %}
+
 </head>
-<body{% block html_body_attributes %}{% for attr, value in html.body_attributes %} {{ attr }}="{{ value | raw }}"{% endfor %}{% endblock html_body_attributes %}>
+<body{% block body_attr %}{% for attr, value in html.body_attributes %} {{ attr }}="{{ value | raw }}"{% endfor %}{% endblock body_attr %}>
 {% block body html.body %}
-{% block body_js %}
-{% endblock body_js %}
+{% block body_js '' %}
 </body>
 </html>
