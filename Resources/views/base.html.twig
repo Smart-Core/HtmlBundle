@@ -41,6 +41,7 @@
 {% block meta %}
 {% if html.isHtml5 %}
     <meta charset="utf-8">
+    <meta http-equiv= "X-UA-Compatible" content="IE=edge">
 {% endif %}
 {% for type, vals in html.meta %}
 {% for name, content in vals %}
