@@ -7,6 +7,6 @@ services:
 
     smart.html.twig.extension:
         class: SmartCore\Bundle\HtmlBundle\Twig\HtmlExtension
-        arguments: [ @html ]
+        arguments: [ "@html" ]
         tags:
             - { name: twig.extension }
