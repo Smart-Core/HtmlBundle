@@ -24,7 +24,7 @@ class HtmlExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'smart_html' => new \Twig_Function_Method($this, 'getHtml'),
+            new \Twig_SimpleFunction('smart_html', [$this, 'getHtml']),
         ];
     }
 
