@@ -3,8 +3,10 @@
 namespace SmartCore\Bundle\HtmlBundle\Twig;
 
 use SmartCore\Bundle\HtmlBundle\Html;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class HtmlExtension extends \Twig_Extension
+class HtmlExtension extends AbstractExtension
 {
     protected $html;
 
@@ -24,7 +26,7 @@ class HtmlExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('smart_html', [$this, 'getHtml']),
+            new TwigFunction('smart_html', [$this, 'getHtml']),
         ];
     }
 

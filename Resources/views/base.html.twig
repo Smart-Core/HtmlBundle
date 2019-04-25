@@ -37,54 +37,51 @@
 {% block doctype html.getDoctype|raw %}
 <head>
     <title>{% block title %}{% if html.title %}{{ html.title }}{% endif %}{% endblock title %}</title>
-    <!-- Meta -->
-{% block meta %}
-{% if html.isHtml5 %}
+{% block meta -%}
+{%- if html.isHtml5 %}
+
     <meta charset="utf-8">
     <meta http-equiv= "X-UA-Compatible" content="IE=edge">
-{% endif %}
-{% for type, vals in html.meta %}
-{% for name, content in vals %}
+{%- endif -%}
+{% for type, vals in html.meta -%}
+{% for name, content in vals -%}
     <meta {{ type }}="{{ name }}" content="{{ content }}"{{ html.end }}>
-{% endfor %}
-{% endfor %}
-{% endblock meta %}
+{% endfor -%}
+{% endfor -%}
+{% endblock meta -%}
 
-    <!-- Links -->
-{% block links %}
-{% for href, link in html.links %}
+{% block links -%}
+{% for href, link in html.links -%}
     <link{% for attr, value in link %} {{ attr }}="{{ value }}"{% endfor %}{{ html.end }}>
-{% endfor %}
-{% endblock links %}
+{% endfor -%}
+{% endblock links -%}
 
-    <!-- Styles -->
-{% block pre_styles '' %}
+{% block pre_styles '' -%}
 
-{% block styles %}
-{% for name, style in html.styles %}
+{% block styles -%}
+{% for name, style in html.styles -%}
     <style{% for attr, value in style %}{% if attr == '_code' or attr == 'href' %}{% else %} {{ attr }}="{{ value }}"{% endif %}{% endfor %}>{% if style.href %} @import url({{ style.href | raw }}); {% endif %} {% if style._code is defined and style._code %}{{ style._code | raw }}{% endif %}</style>
-{% endfor %}
-{% endblock styles %}
+{% endfor -%}
+{% endblock styles -%}
 
-{% block post_styles '' %}
+{% block post_styles '' -%}
 
-    <!-- Scripts -->
-{% block scripts %}
+{% block scripts -%}
     <script type="text/javascript">var basePath = "{{ app.request.baseUrl }}/"</script>
-{% for name, script in html.scripts %}
-    <script{% for attr, value in script %}{% if attr == '_code' %}{% else %} {{ attr }}="{{ value | raw }}"{% endif %}{% endfor %}>{% if script._code is defined and script._code %}{{ script._code | raw }}{% endif %}</script>
-{% endfor %}
-{% endblock scripts %}
+{% endblock scripts -%}
 
-{# Custom code #}
-{% block html_head_custom_code %}
+{% block html_head_custom_code -%}
     {{ html.custom_code }}
-    {% if html.document_ready %}<!-- document_ready -->{{ html.document_ready }}{% endif %}
-{% endblock html_head_custom_code %}
+    {% if html.document_ready %}<!-- document_ready -->{{ html.document_ready }}{% endif -%}
+{% endblock html_head_custom_code -%}
 
 </head>
 <body{% block body_attr %}{% for attr, value in html.body_attributes %} {{ attr }}="{{ value | raw }}"{% endfor %}{% endblock body_attr %}>
 {% block body html.body %}
-{% block body_js '' %}
+{% block body_js -%}
+    {% for name, script in html.scripts -%}
+        <script{% for attr, value in script %}{% if attr == '_code' %}{% else %} {{ attr }}="{{ value | raw }}"{% endif %}{% endfor %}>{% if script._code is defined and script._code %}{{ script._code | raw }}{% endif %}</script>
+    {% endfor -%}
+{%- endblock body_js -%}
 </body>
 </html>
