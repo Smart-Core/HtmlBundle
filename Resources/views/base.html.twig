@@ -60,8 +60,19 @@
 {% block pre_styles '' -%}
 
 {% block styles -%}
-{% for name, style in html.styles -%}
-    <style{% for attr, value in style %}{% if attr == '_code' or attr == 'href' %}{% else %} {{ attr }}="{{ value }}"{% endif %}{% endfor %}>{% if style.href %} @import url({{ style.href | raw }}); {% endif %} {% if style._code is defined and style._code %}{{ style._code | raw }}{% endif %}</style>
+{% for name, style in html.styles %}
+    <style{% for attr, value in style -%}
+        {%- if attr is defined and (attr == '_code' or attr == 'href') %}
+        {%- else %} {{ attr }}="{{ value }}"{% endif %}
+{% endfor -%}>
+        {%- if style.href is defined and style.href -%}
+            @import url({{ style.href | raw }});
+        {%- endif -%}
+
+        {% if style._code is defined and style._code -%}
+            {{ style._code | raw -}}
+        {% endif -%}
+    </style>
 {% endfor -%}
 {% endblock styles -%}
 
