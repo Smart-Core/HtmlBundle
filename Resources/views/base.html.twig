@@ -84,7 +84,7 @@
 
 {% block html_head_custom_code -%}
     {{ html.custom_code | raw }}
-    {% if html.document_ready %}<!-- document_ready -->{{ html.document_ready }}{% endif -%}
+    {% if html.document_ready %}<!-- document_ready -->{{ html.document_ready | raw }}{% endif -%}
 {% endblock html_head_custom_code -%}
 
 </head>
