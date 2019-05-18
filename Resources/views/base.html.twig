@@ -83,7 +83,7 @@
 {% endblock scripts -%}
 
 {% block html_head_custom_code -%}
-    {{ html.custom_code }}
+    {{ html.custom_code | raw }}
     {% if html.document_ready %}<!-- document_ready -->{{ html.document_ready }}{% endif -%}
 {% endblock html_head_custom_code -%}
 
