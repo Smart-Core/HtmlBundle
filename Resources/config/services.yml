@@ -3,7 +3,7 @@ services:
         class: SmartCore\Bundle\HtmlBundle\Html
         public: true
     SmartCore\Bundle\HtmlBundle\Html:
-        aliad: html
+        alias: html
 
     html.tidy:
         class: SmartCore\Bundle\HtmlBundle\Service\TidyService
